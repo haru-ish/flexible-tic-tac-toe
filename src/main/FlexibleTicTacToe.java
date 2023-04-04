@@ -14,9 +14,10 @@ public class FlexibleTicTacToe {
 	private List<Integer> player1Positions = new ArrayList<Integer>();
 	private List<Integer> player2Positions = new ArrayList<Integer>();
 
+	// specify the number of tiles (rows and columns) and a row to win
 	FlexibleTicTacToe(int row, int column, int num) throws TilesNumberException {
+		// create a flexible tic-tac-toe game board
 		makeGameBoard(row, column, num);
-		// set up the number of a row to win
 		this.row = row;
 		this.column = column;
 		this.num = num;
@@ -24,7 +25,6 @@ public class FlexibleTicTacToe {
 
 	public enum Player {
 		PLAYER1, PLAYER2;
-
 		public Player next() {
 			return Player.values()[(this.ordinal() + 1) % Player.values().length];
 		}
@@ -33,8 +33,22 @@ public class FlexibleTicTacToe {
 	public enum WinStatus {
 		PLAYER1, PLAYER2, DRAW, INPROGRESS
 	}
+	
+	public char[][] makeGameBoard(int row, int column, int num) throws TilesNumberException {
+		// check arguments are available or not
+		checkNumbers(row, column, num);
+		// create a flexible tic-tac-toe game board
+		tiles = new char[row][column];
+		// give each tile a value
+		char index = ' ';
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				tiles[i][j] = index;
+			}
+		}
+		return tiles;
+	}
 
-	// specify the number of tiles (rows and columns) and a row to win
 	public void checkNumbers(int row, int column, int num) throws TilesNumberException {
 		// in these case, cannot create a board to play tic-tac-toe
 		if (row < 1 || column < 1 || num < 1) {
@@ -45,65 +59,36 @@ public class FlexibleTicTacToe {
 		}
 	}
 
-	public char[][] makeGameBoard(int row, int column, int num) throws TilesNumberException {
-		checkNumbers(row, column, num);
-		// create a flexible tic-tac-toe game board
-		tiles = new char[row][column];
-		// HashMap<Integer, char[][]> positions = new HashMap<Integer, char[][]>();
-		// give a number to each tile
-		char index = 1;
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < column; j++) {
-				tiles[i][j] = index;
-				index++;
-			}
-		}
-		return tiles;
-	}
-
 	// place their symbol on the board if the position is available
 	public WinStatus playerSelectPosition(int position, Player player) throws PositionNumberException {
 		// check if the position is available
 		checkThePosition(position);
+
+		char playerSymbol;
+		List<Integer> playerPositions;
+
 		// when player1's turn
 		if (player == Player.PLAYER1) {
-			// put the symbol in the position
-			for (int i = 0; i < row; i++) {
-				for (int j = 0; j < column; j++) {
-					if (tiles[i][j] == (char) position) {
-						tiles[i][j] = 'x';
-						player1Positions.add(position);
-						break;
-					}
-				}
-			}
-			// check if the player win
-			return checkWinning(player);
-		}
+			playerSymbol = 'o';
+			playerPositions = player1Positions;
 		// when player2's turn
-		if (player == Player.PLAYER2) {
-			// put the symbol in the position
-			for (int i = 0; i < row; i++) {
-				for (int j = 0; j < column; j++) {
-					if (tiles[i][j] == (char) position) {
-						tiles[i][j] = 'x';
-						player2Positions.add(position);
-						break;
-					}
-				}
-			}
-			// check if the player win
-			return checkWinning(player);
+		} else {
+			playerSymbol = 'x';
+			playerPositions = player2Positions;
 		}
-		// want to throw error
-		return null;
+		// place the symbol in the position
+		tiles[(position - 1) / column][(position - 1) % column] = playerSymbol;
+		playerPositions.add(position);
+
+		// check if the player win
+		return checkWinning(player);
 	}
 
 	// make diagonal winning conditions
 	public List<List<Integer>> winningConditionWithDiagonal() {
 		List<List<Integer>> allList = new ArrayList<List<Integer>>();
 		int element = 1;
-		// current column count
+		// current number of column
 		int line = 1;
 		// make a diagonal winning condition from left and top
 		for (int i = 1; i < row * column; i++) {
@@ -151,7 +136,7 @@ public class FlexibleTicTacToe {
 		return allList;
 	}
 
-	// make winning condition
+	// make winning conditions except diagonal
 	public List<List<Integer>> winningCondition() {
 		List<List<Integer>> allList = new ArrayList<List<Integer>>();
 		if (num == 1) {
@@ -205,7 +190,8 @@ public class FlexibleTicTacToe {
 
 	// check if the player win
 	public WinStatus checkWinning(Player player) {
-		if(num == 1) {
+		// if a row to win is 1, player 1 wins
+		if (num == 1) {
 			return WinStatus.PLAYER1;
 		}
 		if (player1Positions.size() + player2Positions.size() == row * column) {
@@ -231,7 +217,7 @@ public class FlexibleTicTacToe {
 	}
 
 	// check if the position that players select is available
-	public void checkThePosition(int position) throws PositionNumberException {
+	public List<Integer> checkThePosition(int position) throws PositionNumberException {
 		// in this case, the position does not exist
 		if (position > row * column) {
 			throw new PositionNumberException("Enter a number less than " + position);
@@ -241,9 +227,11 @@ public class FlexibleTicTacToe {
 		}
 		// in this case, cannot select the position because it is already selected
 		if (selectedPositions.contains(position)) {
-			throw new PositionNumberException("You cannot select the position because it is already selected.");
+			throw new PositionNumberException("You cannot select the position because it is already selected");
 		}
 		selectedPositions.add(position);
+
+		return selectedPositions;
 	}
 
 }
