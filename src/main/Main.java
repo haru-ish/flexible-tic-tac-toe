@@ -8,7 +8,7 @@ public class Main {
 
 	public static void main(String[] args) throws TilesNumberException, PositionNumberException {
 		// decide the number of tiles(row, column) and how many in a row are required to win
-		FlexibleTicTacToe tictactoe = new FlexibleTicTacToe(4,3,2);
+		FlexibleTicTacToe tictactoe = new FlexibleTicTacToe(3,4,3);
 		// set up the player
 		Player player = Player.PLAYER1;
 		// receive the game's result (who is winner)
@@ -25,6 +25,8 @@ public class Main {
 			result = tictactoe.playerSelectPosition(position, player);
 			// change player
 			player = player.next();
+			// for print out the game board
+			System.out.println(tictactoe.textGameBoard());
 		}
 		// for print out
 		if(result == WinStatus.DRAW) {
