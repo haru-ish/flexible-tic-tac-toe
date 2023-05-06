@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -60,12 +61,16 @@ class FlexibleTicTacToeTest {
 	}
 
 	@Test
-	@DisplayName("check to make game board properly")
-	void testMakeGameBoard() throws TilesNumberException, PositionNumberException {
+	@DisplayName("check to return INPROGRESS for player1")
+	void testTextGameBoard() throws PositionNumberException, TilesNumberException {
 		FlexibleTicTacToe flex = new FlexibleTicTacToe(3, 4, 2);
-		flex.playerSelectPosition(10, Player.PLAYER1);
-		char[][] tiles = flex.makeGameBoard();
-		assertEquals(tiles[(10-1) / 4][(10-1) % 4], Player.PLAYER1.getSymbol());
+		flex.playerSelectPosition(1, Player.PLAYER1);
+		String gameBoard = flex.textGameBoard();
+		int rows = 3;
+		int columns = 4; 
+		int len = 4 * columns * (rows * 2 - 1) -1;
+		assertEquals(gameBoard.length(), len);
+		assertEquals(gameBoard.charAt(1), Player.PLAYER1.getSymbol());
 	}
 
 	@Test
@@ -102,7 +107,7 @@ class FlexibleTicTacToeTest {
 		FlexibleTicTacToe flex = new FlexibleTicTacToe(3, 4, 2);
 		assertDoesNotThrow(() -> flex.playerSelectPosition(3, Player.PLAYER1));
 	}
-
+	
 	@Test
 	@DisplayName("check to return INPROGRESS for player1")
 	void checkReturnInprogress1() throws PositionNumberException, TilesNumberException {
