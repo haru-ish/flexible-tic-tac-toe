@@ -1,19 +1,19 @@
 package main;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-
-import main.FlexibleTicTacToe.Player;
-import main.FlexibleTicTacToe.WinStatus;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import main.FlexibleTicTacToe.Player;
+import main.FlexibleTicTacToe.WinStatus;
 
 @TestMethodOrder(OrderAnnotation.class)
 class FlexibleTicTacToeTest {
@@ -61,7 +61,7 @@ class FlexibleTicTacToeTest {
 	}
 
 	@Test
-	@DisplayName("check to return INPROGRESS for player1")
+	@DisplayName("check to make game board properly")
 	void testTextGameBoard() throws PositionNumberException, TilesNumberException {
 		FlexibleTicTacToe flex = new FlexibleTicTacToe(3, 4, 2);
 		flex.playerSelectPosition(1, Player.PLAYER1);
